@@ -97,29 +97,35 @@ if (isset($_POST['submit'])) {
         </div>
     </form>
     <div class=" search d-flex">
-        <div class="col-3 m-5">
-            <h5>Chi nhánh</h5>
-            <select class="form-select" aria-label="Default select example">
-                <option selected value="all">Tất cả</option>
-                <option value="1">Quận 10</option>
-                <option value="2">Bình Thạnh</option>
-                <option value="3">Thủ Đức</option>
-                <option value="4">Gò Vấp</option>
-            </select>
-        </div>
-        <div class="col-3 m-5">
-            <h5>Phòng ban</h5>
-            <select class="form-select" aria-label="Default select example">
-                <option selected value="all">Tất cả</option>
-                <option value="1">Nhân Sự</option>
-                <option value="2">Kế Toán</option>
-                <option value="3">Quản Lý</option>
-                <option value="3">Lễ Tân</option>
-            </select>
-        </div>
-        <div class="col-3 m-5" style="margin-top: 5rem!important;">
-            <button type="button" class="btn btn-primary">Hiển thị</button>
-        </div>
+        <form method="post">
+            <div class="col-3 m-5">
+                <h5>Chi nhánh</h5>
+                <?php
+                $querygroup = mysqli_query($conn,"");
+                ?>
+                <select class="form-select" aria-label="Default select example">
+                    <option selected value="all">Tất cả</option>
+                    <option value="1">Quận 10</option>
+                    <option value="2">Bình Thạnh</option>
+                    <option value="3">Thủ Đức</option>
+                    <option value="4">Gò Vấp</option>
+                </select>
+            </div>
+            <div class="col-3 m-5">
+                <h5>Phòng ban</h5>
+                <select class="form-select" aria-label="Default select example">
+                    <option selected value="all">Tất cả</option>
+                    <option value="1">Nhân Sự</option>
+                    <option value="2">Kế Toán</option>
+                    <option value="3">Quản Lý</option>
+                    <option value="3">Lễ Tân</option>
+                </select>
+            </div>
+            <div class="col-3 m-5" style="margin-top: 5rem!important;">
+                <button type="button" class="btn btn-primary">Hiển thị</button>
+            </div>
+        </form>
+
     </div>
     <div class="table m-3">
         <table class="table">
