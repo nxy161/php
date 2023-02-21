@@ -25,7 +25,6 @@ if (isset($_POST['submit'])) {
     $address = $_POST['address'];
     $birthday = $_POST['birthday'];
     $store = $_POST['store'];
-
     $group = $_POST['group'];
 
     $sql = "insert into users (name,birthday,address,main_group_id,main_store_id) 
@@ -39,12 +38,14 @@ if (isset($_POST['submit'])) {
 ?>
 
 <body>
+    <div style="margin-left: 50px;">
 
-    <h1 class="m-3">Danh sách nhân viên</h1>
-    <!-- Button trigger modal -->
-    <button style="margin-left: 1rem;" type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-        Thêm Nhân Viên
-    </button>
+        <h1>Danh sách nhân viên</h1>
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Thêm Nhân Viên
+        </button>
+    </div>
 
 
     <!-- Modal -->
@@ -71,21 +72,25 @@ if (isset($_POST['submit'])) {
                         </div>
                         <div class="input-group input-group-sm mb-3">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Chi nhánh</span>
-                            <select name="store" class="form-select" aria-label="Default select example">
-                                <option value="1">Quận 10</option>
-                                <option value="2">Bình Thạnh</option>
-                                <option value="3">Thủ Đức</option>
-                                <option value="3">Gò Vấp</option>
-                            </select>
+                            <?php
+                            $querySelectStore = mysqli_query($conn, "(SELECT name FROM stores)");
+                            echo '<select name="store" class="form-select" aria-label="Default select example">';
+                            while ($row = mysqli_fetch_assoc($querySelectStore)) {
+                                echo '<option value="1">' . $row['name'] . '</option>';
+                            }
+                            echo '</select>';
+                            ?>
                         </div>
                         <div class="input-group input-group-sm mb-3">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Phòng ban</span>
-                            <select name="group" class="form-select" aria-label="Default select example">
-                                <option value="1">Nhân Sự</option>
-                                <option value="2">Kế Toán</option>
-                                <option value="3">Quản Lý</option>
-                                <option value="4">Lễ Tân</option>
-                            </select>
+                            <?php
+                            $querySelectGroup = mysqli_query($conn, "(SELECT description FROM groups)");
+                            echo '<select name="group" class="form-select" aria-label="Default select example">';
+                            while ($row = mysqli_fetch_assoc($querySelectGroup)) {
+                                echo '<option value="1">' . $row['description'] . '</option>';
+                            }
+                            echo '</select>';
+                            ?>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -96,37 +101,38 @@ if (isset($_POST['submit'])) {
             </div>
         </div>
     </form>
-    <div class=" search d-flex">
-        <form method="post">
+    <form method="get">
+        <div class="search d-flex">
             <div class="col-3 m-5">
                 <h5>Chi nhánh</h5>
                 <?php
-                $querygroup = mysqli_query($conn,"");
+                $querySelectStore = mysqli_query($conn, "(SELECT name FROM stores)");
+                echo '<select class="form-select" aria-label="Default select example">';
+                echo '<option selected value="all">Tất cả</option>';
+                while ($row = mysqli_fetch_assoc($querySelectStore)) {
+                    echo '<option value="1">' . $row['name'] . '</option>';
+                }
+                echo '</select>';
                 ?>
-                <select class="form-select" aria-label="Default select example">
-                    <option selected value="all">Tất cả</option>
-                    <option value="1">Quận 10</option>
-                    <option value="2">Bình Thạnh</option>
-                    <option value="3">Thủ Đức</option>
-                    <option value="4">Gò Vấp</option>
-                </select>
             </div>
             <div class="col-3 m-5">
                 <h5>Phòng ban</h5>
-                <select class="form-select" aria-label="Default select example">
-                    <option selected value="all">Tất cả</option>
-                    <option value="1">Nhân Sự</option>
-                    <option value="2">Kế Toán</option>
-                    <option value="3">Quản Lý</option>
-                    <option value="3">Lễ Tân</option>
-                </select>
+                <?php
+                $querySelectGroup = mysqli_query($conn, "(SELECT description FROM groups)");
+                echo '<select class="form-select" aria-label="Default select example">';
+                echo '<option selected value="all">Tất cả</option>';
+                while ($row = mysqli_fetch_assoc($querySelectGroup)) {
+                    echo '<option value="1">' . $row['description'] . '</option>';
+                }
+                echo '</select>';
+                ?>
             </div>
             <div class="col-3 m-5" style="margin-top: 5rem!important;">
-                <button type="button" class="btn btn-primary">Hiển thị</button>
+                <button type="submit" class="btn btn-primary">Hiển thị</button>
             </div>
-        </form>
 
-    </div>
+        </div>
+    </form>
     <div class="table m-3">
         <table class="table">
             <thead>
