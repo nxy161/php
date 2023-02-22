@@ -54,7 +54,7 @@ if (isset($_POST['submit'])) {
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Thêm Nhân Viên</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
@@ -75,8 +75,10 @@ if (isset($_POST['submit'])) {
                             <?php
                             $querySelectStore = mysqli_query($conn, "(SELECT name FROM stores)");
                             echo '<select name="store" class="form-select" aria-label="Default select example">';
+                            $i = 1;
                             while ($row = mysqli_fetch_assoc($querySelectStore)) {
-                                echo '<option value="1">' . $row['name'] . '</option>';
+                                echo '<option value="'.$i.'">' . $row['name'] . '</option>';
+                                $i++;
                             }
                             echo '</select>';
                             ?>
@@ -86,31 +88,36 @@ if (isset($_POST['submit'])) {
                             <?php
                             $querySelectGroup = mysqli_query($conn, "(SELECT description FROM groups)");
                             echo '<select name="group" class="form-select" aria-label="Default select example">';
+                            $i = 1;
                             while ($row = mysqli_fetch_assoc($querySelectGroup)) {
-                                echo '<option value="1">' . $row['description'] . '</option>';
+                                echo '<option value="'.$i.'">' . $row['description'] . '</option>';
+                                $i++;
                             }
                             echo '</select>';
                             ?>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary" name="submit">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary" name="submit">Thêm</button>
                     </div>
                 </div>
             </div>
         </div>
     </form>
-    <form method="get">
+
+    <form method="post">
         <div class="search d-flex">
             <div class="col-3 m-5">
                 <h5>Chi nhánh</h5>
                 <?php
                 $querySelectStore = mysqli_query($conn, "(SELECT name FROM stores)");
-                echo '<select class="form-select" aria-label="Default select example">';
+                echo '<select name="storeSearch" class="form-select" aria-label="Default select example">';
                 echo '<option selected value="all">Tất cả</option>';
+                $i = 1;
                 while ($row = mysqli_fetch_assoc($querySelectStore)) {
-                    echo '<option value="1">' . $row['name'] . '</option>';
+                    echo '<option value="' . $i . '">' . $row['name'] . '</option>';
+                    $i++;
                 }
                 echo '</select>';
                 ?>
@@ -119,16 +126,18 @@ if (isset($_POST['submit'])) {
                 <h5>Phòng ban</h5>
                 <?php
                 $querySelectGroup = mysqli_query($conn, "(SELECT description FROM groups)");
-                echo '<select class="form-select" aria-label="Default select example">';
+                echo '<select name="groupSearch" class="form-select" aria-label="Default select example">';
                 echo '<option selected value="all">Tất cả</option>';
+                $i = 1;
                 while ($row = mysqli_fetch_assoc($querySelectGroup)) {
-                    echo '<option value="1">' . $row['description'] . '</option>';
+                    echo '<option value="' . $i . '">' . $row['description'] . '</option>';
+                    $i++;
                 }
                 echo '</select>';
                 ?>
             </div>
             <div class="col-3 m-5" style="margin-top: 5rem!important;">
-                <button type="submit" class="btn btn-primary">Hiển thị</button>
+                <button type="submit" name="submitSearch" class="btn btn-primary">Hiển thị</button>
             </div>
 
         </div>
@@ -149,12 +158,74 @@ if (isset($_POST['submit'])) {
             </thead>
             <tbody>
                 <?php
-                $query1 = mysqli_query($conn, "SELECT us.id, us.name, us.address, us.birthday, st.name as strname, gr.description, us.created FROM users AS us 
+                $querySearch = mysqli_query($conn, "SELECT us.id, us.name, us.address, us.birthday, st.name as strname, gr.description, us.created FROM users AS us 
                 LEFT JOIN groups as gr 
                 ON us.main_group_id = gr.id
                 LEFT JOIN stores as st
                 ON us.main_store_id  = st.id");
-                while ($row = mysqli_fetch_assoc($query1)) {
+                if (isset($_POST["submitSearch"])) {
+                    $storeName = $_POST['storeSearch'];
+                    $groupSearch = $_POST['groupSearch'];
+                    if ($storeName == 'all' && $groupSearch == 'all') {
+                        $querySearch;
+                    } elseif ($storeName == 'all') {
+                        $querySearchValue = mysqli_query($conn, "SELECT st.id,gr.id, us.id, us.name, us.address, us.birthday, st.name as strname, gr.description, us.created FROM users AS us 
+                        LEFT JOIN groups as gr 
+                        ON us.main_group_id = gr.id
+                        LEFT JOIN stores as st
+                        ON us.main_store_id  = st.id
+                        where  gr.id = '$groupSearch'
+                    ");
+                        $querySearch  = $querySearchValue;
+                    } elseif ($groupSearch == 'all') {
+                        $querySearchValue = mysqli_query($conn, "SELECT st.id,gr.id, us.id, us.name, us.address, us.birthday, st.name as strname, gr.description, us.created FROM users AS us 
+                        LEFT JOIN groups as gr 
+                        ON us.main_group_id = gr.id
+                        LEFT JOIN stores as st
+                        ON us.main_store_id  = st.id
+                        where  st.id = '$storeName'
+                    ");
+                        $querySearch  = $querySearchValue;
+                    } elseif ($storeName == null || $groupSearch == null) {
+                        $querySearch = $querySearchAll;
+                    } else {
+                        $querySearchValue = mysqli_query($conn, "SELECT st.id,gr.id, us.id, us.name, us.address, us.birthday, st.name as strname, gr.description, us.created FROM users AS us 
+                        LEFT JOIN groups as gr 
+                        ON us.main_group_id = gr.id
+                        LEFT JOIN stores as st
+                        ON us.main_store_id  = st.id
+                       where st.id = '$storeName' and gr.id = '$groupSearch'
+                    ");
+                        $querySearch  = $querySearchValue;
+                    }
+                    while ($rowSearch = mysqli_fetch_assoc($querySearch)) {
+                        echo '<tr>';
+                        echo   '<th scope="row">' . $rowSearch['id'] . '</th>';
+                        echo   '<td>' . $rowSearch['name'] . '</td>';
+                        echo   '<td>' . $rowSearch['address'] . '</td>';
+                        echo   '<td>' . $rowSearch['birthday'] . '</td>';
+                        if ($rowSearch['strname'] == null) {
+                            echo   '<td scope="chi nhánh">----</td>';
+                        } else {
+                            echo   '<td scope="chi nhánh">' . $rowSearch['strname'] . '</td>';
+                        }
+                        if ($rowSearch['description'] == null) {
+                            echo   '<td>----</td>';
+                        } else {
+                            echo   '<td>' . $rowSearch['description'] . '</td>';
+                        }
+                        echo   '<td>' . $rowSearch['created'] . '</td>';
+                        echo '<td><button class="btn btn-group"><a href="model/update.php?updateid=' . $rowSearch['id'] . '"><i class="fa-solid fa-pen-to-square" style="color:blue;"></i></a></button><button class="btn btn-group"><a href="model/delete.php?deleteid=' . $rowSearch['id'] . '"><i class="fa-solid fa-trash" style="color:red;"></i></a></button></td>';
+                        echo  '</tr>';
+                    };
+                }
+
+                // $query1 = mysqli_query($conn, "SELECT us.id, us.name, us.address, us.birthday, st.name as strname, gr.description, us.created FROM users AS us 
+                // LEFT JOIN groups as gr 
+                // ON us.main_group_id = gr.id
+                // LEFT JOIN stores as st
+                // ON us.main_store_id  = st.id");
+                while ($row = mysqli_fetch_assoc($querySearch)) {
                     echo '<tr>';
                     echo   '<th scope="row">' . $row['id'] . '</th>';
                     echo   '<td>' . $row['name'] . '</td>';
@@ -171,10 +242,10 @@ if (isset($_POST['submit'])) {
                         echo   '<td>' . $row['description'] . '</td>';
                     }
                     echo   '<td>' . $row['created'] . '</td>';
-                    echo '<td><button class="btn btn-group"><a href="model/update.php?updateid=' . $row['id'] . '"><i class="fa-solid fa-pen-to-square" style="color:blue;"></i></a></button><button class="btn btn-group"><a href="model/delete.php?deleteid=' . $row['id'] . '"><i class="fa-solid fa-trash" style="color:red;"></i></a></button></td>';
+                    echo '<td><button class="btn btn-group"><a href="model/upload.php?uploadid=' . $row['id'] . '"><i class="fa-solid fa-eye" style="color:blue;"></i></a></button><button class="btn btn-group"><a href="model/update.php?updateid=' . $row['id'] . '"><i class="fa-solid fa-pen-to-square" style="color:blue;"></i></a></button><button class="btn btn-group"><a href="model/delete.php?deleteid=' . $row['id'] . '"><i class="fa-solid fa-trash" style="color:red;"></i></a></button></td>';
                     echo  '</tr>';
                 };
-                //<button class="btn btn-group"><a><i class="fa-solid fa-eye" style="color:blue;"></i></a></button>
+
                 ?>
             </tbody>
         </table>
