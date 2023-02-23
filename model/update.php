@@ -27,6 +27,34 @@ include $path . '/connect.php';
     ON us.main_store_id  = st.id
     where us.id = '$id' ");
     $row = mysqli_fetch_assoc($query2);
+    if (isset($_POST['update']) && isset($_FILES['image'])) {
+        // print_r($_FILES['image']);
+        if ($_FILES['image']['error'] === 4) {
+            echo "<script>alert('Image Does not exist');</script>";
+        } else {
+            $fileName = $_FILES['image']['name'];
+            $fileSize = $_FILES['image']['size'];
+            $tmpName = $_FILES['image']['tmp_name'];
+            $validImage = ['jpg', 'jpge', 'png'];
+            $imageEx = explode('.', $fileName);
+            $imageEx = strtolower(end($imageEx));
+            if (!in_array($imageEx, $validImage)) {
+
+                echo "<script>alert('Invalid Image');</script>";
+            } elseif ($fileSize > 100000000) {
+                echo "<script>alert('Image too large');</script>";
+            } else {
+                $newImg = uniqid();
+                $newImg .= '.' . $imageEx;
+                move_uploaded_file($tmpName, '../image/' . $newImg);
+                $queryUpload = "Insert into user_profiles (user_id, image) VALUES ('$id', '$newImg' )";
+                mysqli_query($conn, $queryUpload);
+                echo "<script>alert('Image upload success!');
+
+                </script>";
+            }
+        }
+    };
     if (isset($_POST['update'])) {
         $name = $_POST['nameuser'];
         $address = $_POST['address'];
@@ -36,7 +64,7 @@ include $path . '/connect.php';
         $sql = "update users set name='$name', address='$address', birthday = '$birthday', main_group_id='$group',main_store_id='$store' where id = $id";
         if (mysqli_query($conn, $sql)) {
             echo "<script>alert('Update success!')</script>";
-            echo '<script>window.location.href = "../index.php";</script>';
+            echo '<script>window.location.href = "/model/update.php?updateid='.$id.'";</script>';
         } else {
             echo "Error: " . $sql . "<br>" . mysqli_error($conn);
         }
