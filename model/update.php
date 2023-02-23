@@ -27,32 +27,18 @@ include $path . '/connect.php';
     ON us.main_store_id  = st.id
     where us.id = '$id' ");
     $row = mysqli_fetch_assoc($query2);
-    if (isset($_POST['uploadImg']) && isset($_FILES['image'])) {
-        // print_r($_FILES['image']);
-        if ($_FILES['image']['error'] === 4) {
-            echo "<script>alert('Image Does not exist');</script>";
+    if (isset($_POST['update'])) {
+        $name = $_POST['nameuser'];
+        $address = $_POST['address'];
+        $birthday = $_POST['birthday'];
+        $store = $_POST['store'];
+        $group = $_POST['group'];
+        $sql = "update users set name='$name', address='$address', birthday = '$birthday', main_group_id='$group',main_store_id='$store' where id = $id";
+        if (mysqli_query($conn, $sql)) {
+            echo "<script>alert('Update success!')</script>";
+            echo '<script>window.location.href = "../index.php";</script>';
         } else {
-            $fileName = $_FILES['image']['name'];
-            $fileSize = $_FILES['image']['size'];
-            $tmpName = $_FILES['image']['tmp_name'];
-            $validImage = ['jpg', 'jpge', 'png'];
-            $imageEx = explode('.', $fileName);
-            $imageEx = strtolower(end($imageEx));
-            if (!in_array($imageEx, $validImage)) {
-
-                echo "<script>alert('Invalid Image');</script>";
-            } elseif ($fileSize > 100000000) {
-                echo "<script>alert('Image too large');</script>";
-            } else {
-                $newImg = uniqid();
-                $newImg .= '.' . $imageEx;
-                move_uploaded_file($tmpName, '../image/' . $newImg);
-                $queryUpload = "Insert into user_profiles (user_id, image) VALUES ('$id', '$newImg' )";
-                mysqli_query($conn, $queryUpload);
-                echo "<script>alert('Image upload success!');
-
-                </script>";
-            }
+            echo "Error: " . $sql . "<br>" . mysqli_error($conn);
         }
     };
     if (isset($_POST['cancle'])) {
@@ -77,7 +63,7 @@ include $path . '/connect.php';
                 </div>
                 <div class="input-group input-group-sm mb-3">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Ngày sinh</span>
-                    <input value="<?php echo $row['birthday'] ?>" name="birthday" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                    <input id="dateformat" value="<?php echo $row['birthday'] ?>" name="birthday" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                 </div>
                 <div class="input-group input-group-sm mb-3">
                     <span class="input-group-text" id="inputGroup-sizing-sm">Chi nhánh</span>
@@ -130,7 +116,7 @@ include $path . '/connect.php';
             </div>
             <div class="modal-footer">
                 <button type="submit" name="cancle" class="btn btn-secondary mx-3" data-bs-dismiss="modal">Huỷ</button>
-                <button type="submit" class="btn btn-primary" name="uploadImg">Chỉnh sửa</button>
+                <button type="submit" class="btn btn-primary" name="update">Chỉnh sửa</button>
             </div>
 
         </form>
@@ -157,7 +143,7 @@ include $path . '/connect.php';
                 window.history.replaceState( null, null, window.location.href );
                 }
                 </script>';
-                
+
                 ?>
             <?php endforeach; ?>
             <?php
@@ -180,6 +166,34 @@ include $path . '/connect.php';
         </tbody>
 
     </table>
+
+    <link rel="stylesheet" href="../datetimepicker-master/datetimepicker-master/jquery.datetimepicker.css">
+
+    <script src="../datetimepicker-master/datetimepicker-master/jquery.js"></script>
+    <script src="../datetimepicker-master/datetimepicker-master/jquery.datetimepicker.js"></script>
+    <script src="../datetimepicker-master/datetimepicker-master/build/jquery.datetimepicker.full.min.js"></script>
+    <script>
+        jQuery('#dateformat').datetimepicker();
+        jQuery.datetimepicker.setLocale('de');
+
+        jQuery('#dateformat').datetimepicker({
+            i18n: {
+                de: {
+                    months: [
+                        'Januar', 'Februar', 'März', 'April',
+                        'Mai', 'Juni', 'Juli', 'August',
+                        'September', 'Oktober', 'November', 'Dezember',
+                    ],
+                    dayOfWeek: [
+                        "So.", "Mo", "Di", "Mi",
+                        "Do", "Fr", "Sa.",
+                    ]
+                }
+            },
+            timepicker: false,
+            format: 'd.m.Y'
+        });
+    </script>
 </body>
 
 </html>
