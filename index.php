@@ -11,6 +11,7 @@ include './model/delete.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/fontawesome-free-6.3.0-web/fontawesome-free-6.3.0-web/css/all.min.css">
+
     <script>
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
@@ -26,9 +27,10 @@ if (isset($_POST['submit'])) {
     $birthday = $_POST['birthday'];
     $store = $_POST['store'];
     $group = $_POST['group'];
+    $formatDate = date('Y-m-d', strtotime($birthday));
 
     $sql = "insert into users (name,birthday,address,main_group_id,main_store_id) 
-    values('$name','$birthday','$address','$group','$store')";
+    values('$name','$formatDate','$address','$group','$store')";
     if (mysqli_query($conn, $sql)) {
         echo "<script>alert('New record created successfully')</script>";
     } else {
@@ -64,11 +66,11 @@ if (isset($_POST['submit'])) {
                         </div>
                         <div class="input-group input-group-sm mb-3">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Địa chỉ</span>
-                            <input name="address" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                            <input   name="address" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                         </div>
                         <div class="input-group input-group-sm mb-3">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Ngày sinh</span>
-                            <input name="birthday" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                            <input autocomplete="off" type="text" name="birthday" id="dateformat" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                         </div>
                         <div class="input-group input-group-sm mb-3">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Chi nhánh</span>
@@ -77,7 +79,7 @@ if (isset($_POST['submit'])) {
                             echo '<select name="store" class="form-select" aria-label="Default select example">';
                             $i = 1;
                             while ($row = mysqli_fetch_assoc($querySelectStore)) {
-                                echo '<option value="'.$i.'">' . $row['name'] . '</option>';
+                                echo '<option value="' . $i . '">' . $row['name'] . '</option>';
                                 $i++;
                             }
                             echo '</select>';
@@ -90,7 +92,7 @@ if (isset($_POST['submit'])) {
                             echo '<select name="group" class="form-select" aria-label="Default select example">';
                             $i = 1;
                             while ($row = mysqli_fetch_assoc($querySelectGroup)) {
-                                echo '<option value="'.$i.'">' . $row['description'] . '</option>';
+                                echo '<option value="' . $i . '">' . $row['description'] . '</option>';
                                 $i++;
                             }
                             echo '</select>';
@@ -199,11 +201,12 @@ if (isset($_POST['submit'])) {
                         $querySearch  = $querySearchValue;
                     }
                     while ($rowSearch = mysqli_fetch_assoc($querySearch)) {
+
                         echo '<tr>';
                         echo   '<th scope="row">' . $rowSearch['id'] . '</th>';
                         echo   '<td>' . $rowSearch['name'] . '</td>';
                         echo   '<td>' . $rowSearch['address'] . '</td>';
-                        echo   '<td>' . $rowSearch['birthday'] . '</td>';
+                        echo   '<td>' . date('\N\g\à\y\ d \T\h\á\n\g\ m \N\ă\m\ Y', strtotime($rowSearch['birthday'])) . '</td>';
                         if ($rowSearch['strname'] == null) {
                             echo   '<td scope="chi nhánh">----</td>';
                         } else {
@@ -214,7 +217,7 @@ if (isset($_POST['submit'])) {
                         } else {
                             echo   '<td>' . $rowSearch['description'] . '</td>';
                         }
-                        echo   '<td>' . $rowSearch['created'] . '</td>';
+                        echo   '<td>' . date('\N\g\à\y\ d \T\h\á\n\g\ m \N\ă\m\ Y \v\à\o\ \l\ú\c\ H:i:s', strtotime($rowSearch['created'])) . '</td>';
                         echo '<td><button class="btn btn-group"><a href="model/update.php?updateid=' . $rowSearch['id'] . '"><i class="fa-solid fa-pen-to-square" style="color:blue;"></i></a></button><button class="btn btn-group"><a href="model/delete.php?deleteid=' . $rowSearch['id'] . '"><i class="fa-solid fa-trash" style="color:red;"></i></a></button></td>';
                         echo  '</tr>';
                     };
@@ -230,7 +233,7 @@ if (isset($_POST['submit'])) {
                     echo   '<th scope="row">' . $row['id'] . '</th>';
                     echo   '<td>' . $row['name'] . '</td>';
                     echo   '<td>' . $row['address'] . '</td>';
-                    echo   '<td>' . $row['birthday'] . '</td>';
+                    echo   '<td>' . date('\N\g\à\y\ d \T\h\á\n\g\ m \N\ă\m\ Y', strtotime($row['birthday'])) . '</td>';
                     if ($row['strname'] == null) {
                         echo   '<td scope="chi nhánh">----</td>';
                     } else {
@@ -241,7 +244,7 @@ if (isset($_POST['submit'])) {
                     } else {
                         echo   '<td>' . $row['description'] . '</td>';
                     }
-                    echo   '<td>' . $row['created'] . '</td>';
+                    echo   '<td>' . date('\N\g\à\y\ d \T\h\á\n\g\ m \N\ă\m\ Y  H:i:s', strtotime($row['created'])) . '</td>';
                     echo '<td><button class="btn btn-group"><a href="model/upload.php?uploadid=' . $row['id'] . '"><i class="fa-solid fa-eye" style="color:blue;"></i></a></button><button class="btn btn-group"><a href="model/update.php?updateid=' . $row['id'] . '"><i class="fa-solid fa-pen-to-square" style="color:blue;"></i></a></button><button class="btn btn-group"><a href="model/delete.php?deleteid=' . $row['id'] . '"><i class="fa-solid fa-trash" style="color:red;"></i></a></button></td>';
                     echo  '</tr>';
                 };
@@ -252,16 +255,43 @@ if (isset($_POST['submit'])) {
     </div>
 
 
+    <link rel="stylesheet" href="/datetimepicker-master/datetimepicker-master/jquery.datetimepicker.css">
+    <script src="/datetimepicker-master/datetimepicker-master/jquery.js"></script>
+    <script src="/datetimepicker-master/datetimepicker-master/jquery.datetimepicker.js"></script>
+    <script src="/datetimepicker-master/datetimepicker-master/build/jquery.datetimepicker.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
     <script>
         const myModal = document.getElementById('myModal')
         const myInput = document.getElementById('myInput')
 
+        jQuery('#dateformat').datetimepicker();
+        jQuery.datetimepicker.setLocale('de');
+
+        jQuery('#dateformat').datetimepicker({
+            i18n: {
+                de: {
+                    months: [
+                        'Januar', 'Februar', 'März', 'April',
+                        'Mai', 'Juni', 'Juli', 'August',
+                        'September', 'Oktober', 'November', 'Dezember',
+                    ],
+                    dayOfWeek: [
+                        "So.", "Mo", "Di", "Mi",
+                        "Do", "Fr", "Sa.",
+                    ]
+                }
+            },
+            timepicker: false,
+            format: 'd.m.Y'
+        });
+
         myModal.addEventListener('shown.bs.modal', () => {
             myInput.focus()
-        })
+
+        });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+
 </body>
 
 </html>

@@ -27,7 +27,6 @@ include $path . '/connect.php';
     ON us.main_store_id  = st.id
     where us.id = '$id' ");
     $row = mysqli_fetch_assoc($query2);
-
     if (isset($_POST['uploadImg']) && isset($_FILES['image'])) {
         // print_r($_FILES['image']);
         if ($_FILES['image']['error'] === 4) {
