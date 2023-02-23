@@ -41,14 +41,18 @@ include $path . '/connect.php';
         } else {
             echo "Error: " . $sql . "<br>" . mysqli_error($conn);
         }
+    };
+
+    if (isset($_POST['cancle'])) {
+        echo '<script>window.location.href = "../index.php";</script>';
     }
     ?>
+    <div class="d-flex justify-content-center">
 
-    <form method="post">
-        <div class="" style="width: 30%; margin:10rem 0 0 30rem;">
+        <form method="post">
 
             <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Chỉnh sửa nhân viên</h1>
             </div>
             <div class="modal-body">
                 <div class="input-group input-group-sm mb-3">
@@ -68,27 +72,19 @@ include $path . '/connect.php';
                     <select name="store" class="form-select" aria-label="Default select example">
                         <?php
 
-                        if ($row['strname'] == 'Quận 10') {
-                            echo '<option value="1" selected>Quận 10</option>';
-                            echo '<option value="2">Bình Thạnh</option>';
-                            echo '<option value="3">Thủ Đức</option>';
-                            echo '<option value="4">Gò Vấp</option>';
-                        } else if ($row['strname'] == 'Bình Thạnh') {
-                            echo '<option value="1">Quận 10</option>';
-                            echo '<option value="2" selected>Bình Thạnh</option>';
-                            echo '<option value="3">Thủ Đức</option>';
-                            echo '<option value="4">Gò Vấp</option>';
-                        } else if ($row['strname'] == 'Thủ Đức') {
-                            echo '<option value="1">Quận 10</option>';
-                            echo '<option value="2">Bình Thạnh</option>';
-                            echo '<option value="3" selected>Thủ Đức</option>';
-                            echo '<option value="4">Gò Vấp</option>';
-                        } else {
-                            echo '<option value="1">Quận 10</option>';
-                            echo '<option value="2">Bình Thạnh</option>';
-                            echo '<option value="3">Thủ Đức</option>';
-                            echo '<option value="4" selected>Gò Vấp</option>';
+                        $arrayDataStore = array("");
+                        $querySelectNameStore = mysqli_query($conn, 'Select name from stores');
+                        while ($rowNameStore = mysqli_fetch_array($querySelectNameStore)) {
+                            array_push($arrayDataStore, $rowNameStore['name']);
                         }
+
+                        for ($i = 1; $i < count($arrayDataStore); $i++) {
+                            if ($row['strname'] == $arrayDataStore[$i]) {
+                                echo '<option value="' . $i . '" selected>' . $arrayDataStore[$i] . '</option>';
+                            } else {
+                                echo '<option value="' . $i . '" >' . $arrayDataStore[$i] . '</option>';
+                            }
+                        };
                         ?>
                     </select>
                 </div>
@@ -96,27 +92,23 @@ include $path . '/connect.php';
                     <span class="input-group-text" id="inputGroup-sizing-sm">Phòng ban</span>
                     <select name="group" class="form-select" aria-label="Default select example">
                         <?php
-                        if ($row['description'] == 'Nhân sự') {
-                            echo '<option value="1" selected>Nhân Sự</option>';
-                            echo '<option value="2">Kế Toán</option>';
-                            echo '<option value="3">Quản Lý</option>';
-                            echo '<option value="4">Lễ Tân</option>';
-                        } else if ($row['description'] == 'Kế toán') {
-                            echo '<option value="1" >Nhân Sự</option>';
-                            echo '<option value="2" selected>Kế Toán</option>';
-                            echo '<option value="3">Quản Lý</option>';
-                            echo '<option value="4">Lễ Tân</option>';
-                        } else if ($row['description'] == 'Quản lý') {
-                            echo '<option value="1" >Nhân Sự</option>';
-                            echo '<option value="2">Kế Toán</option>';
-                            echo '<option value="3" selected>Quản Lý</option>';
-                            echo '<option value="4">Lễ Tân</option>';
-                        } else {
-                            echo '<option value="1" >Nhân Sự</option>';
-                            echo '<option value="2">Kế Toán</option>';
-                            echo '<option value="3">Quản Lý</option>';
-                            echo '<option value="4"selected>Lễ Tân</option>';
+
+
+                        $arrayDataGroup = array("");
+                        $querySelectNameGroup = mysqli_query($conn, 'Select description from groups');
+                        while ($rowNameGroup = mysqli_fetch_array($querySelectNameGroup)) {
+                            array_push($arrayDataGroup, $rowNameGroup['description']);
                         }
+
+                        for ($i = 1; $i < count($arrayDataGroup); $i++) {
+                            if ($row['description'] == $arrayDataGroup[$i]) {
+                                echo '<option value="' . $i . '" selected>' . $arrayDataGroup[$i] . '</option>';
+                            } else {
+                                echo '<option value="' . $i . '" >' . $arrayDataGroup[$i] . '</option>';
+                            }
+                        };
+
+
 
                         ?>
 
@@ -124,12 +116,12 @@ include $path . '/connect.php';
                 </div>
             </div>
             <div class="modal-footer">
-                <!-- <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button> -->
-                <button type="submit" class="btn btn-primary" name="submit">Save changes</button>
+                <button type="submit" name="cancle" class="btn btn-secondary mx-3" data-bs-dismiss="modal">Huỷ</button>
+                <button type="submit" class="btn btn-primary" name="submit">Chỉnh Sửa</button>
             </div>
-        </div>
 
-    </form>
+        </form>
+    </div>
 
 
 </body>
