@@ -49,9 +49,7 @@ include $path . '/connect.php';
                 move_uploaded_file($tmpName, '../image/' . $newImg);
                 $queryUpload = "Insert into user_profiles (user_id, image) VALUES ('$id', '$newImg' )";
                 mysqli_query($conn, $queryUpload);
-                echo "<script>alert('Image upload success!');
-
-                </script>";
+                
             }
         }
     };

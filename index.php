@@ -206,7 +206,7 @@ if (isset($_POST['submit'])) {
                         echo   '<th scope="row">' . $rowSearch['id'] . '</th>';
                         echo   '<td>' . $rowSearch['name'] . '</td>';
                         echo   '<td>' . $rowSearch['address'] . '</td>';
-                        echo   '<td>' . date('\N\g\à\y\ d \T\h\á\n\g\ m \N\ă\m\ Y', strtotime($rowSearch['birthday'])) . '</td>';
+                        echo   '<td>' . date('\N\g\à\y\ d \-\ m \-\ Y', strtotime($rowSearch['birthday'])) . '</td>';
                         if ($rowSearch['strname'] == null) {
                             echo   '<td scope="chi nhánh">----</td>';
                         } else {
@@ -217,7 +217,7 @@ if (isset($_POST['submit'])) {
                         } else {
                             echo   '<td>' . $rowSearch['description'] . '</td>';
                         }
-                        echo   '<td>' . date('\N\g\à\y\ d \T\h\á\n\g\ m \N\ă\m\ Y \v\à\o\ \l\ú\c\ H:i:s', strtotime($rowSearch['created'])) . '</td>';
+                        echo   '<td>' . date('\N\g\à\y\ d \-\ m \-\ Y \L\ú\c\ H:i:s', strtotime($rowSearch['created'])) . '</td>';
                         echo '<td><button class="btn btn-group"><a href="model/update.php?updateid=' . $rowSearch['id'] . '"><i class="fa-solid fa-pen-to-square" style="color:blue;"></i></a></button><button class="btn btn-group"><a href="model/delete.php?deleteid=' . $rowSearch['id'] . '"><i class="fa-solid fa-trash" style="color:red;"></i></a></button></td>';
                         echo  '</tr>';
                     };
@@ -244,7 +244,7 @@ if (isset($_POST['submit'])) {
                     } else {
                         echo   '<td>' . $row['description'] . '</td>';
                     }
-                    echo   '<td>' . date('\N\g\à\y\ d \T\h\á\n\g\ m \N\ă\m\ Y  H:i:s', strtotime($row['created'])) . '</td>';
+                    echo   '<td>' . date('\N\g\à\y\ d \-\ m \-\ Y \l\ú\c\ H:i:s', strtotime($row['created'])) . '</td>';
                     echo '<td><button class="btn btn-group"><a href="model/upload.php?uploadid=' . $row['id'] . '"><i class="fa-solid fa-eye" style="color:blue;"></i></a></button><button class="btn btn-group"><a href="model/update.php?updateid=' . $row['id'] . '"><i class="fa-solid fa-pen-to-square" style="color:blue;"></i></a></button><button class="btn btn-group"><a href="model/delete.php?deleteid=' . $row['id'] . '"><i class="fa-solid fa-trash" style="color:red;"></i></a></button></td>';
                     echo  '</tr>';
                 };
