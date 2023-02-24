@@ -66,7 +66,7 @@ if (isset($_POST['submit'])) {
                         </div>
                         <div class="input-group input-group-sm mb-3">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Địa chỉ</span>
-                            <input   name="address" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                            <input name="address" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                         </div>
                         <div class="input-group input-group-sm mb-3">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Ngày sinh</span>
@@ -254,7 +254,6 @@ if (isset($_POST['submit'])) {
         </table>
     </div>
 
-
     <link rel="stylesheet" href="/datetimepicker-master/datetimepicker-master/jquery.datetimepicker.css">
     <script src="/datetimepicker-master/datetimepicker-master/jquery.js"></script>
     <script src="/datetimepicker-master/datetimepicker-master/jquery.datetimepicker.js"></script>
@@ -264,7 +263,6 @@ if (isset($_POST['submit'])) {
     <script>
         const myModal = document.getElementById('myModal')
         const myInput = document.getElementById('myInput')
-
         jQuery('#dateformat').datetimepicker();
         jQuery.datetimepicker.setLocale('de');
 
@@ -285,6 +283,7 @@ if (isset($_POST['submit'])) {
             timepicker: false,
             format: 'd.m.Y'
         });
+
 
         myModal.addEventListener('shown.bs.modal', () => {
             myInput.focus()
